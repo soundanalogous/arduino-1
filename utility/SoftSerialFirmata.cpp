@@ -17,7 +17,6 @@
 #include <SoftSerialFirmata.h>
 #include <Firmata.h>
 #include <Encoder7Bit.h>
-#include <SoftwareSerial.h>
 
 boolean SoftSerialFirmata::handlePinMode(byte pin, int mode)
 {
@@ -25,23 +24,22 @@ boolean SoftSerialFirmata::handlePinMode(byte pin, int mode)
 
   }
   return true;
-
 }
 
-void SoftSerialFirmata::hangleCapability(byte pin)
+void SoftSerialFirmata::handleCapability(byte pin)
 {
   if (IS_PIN_DIGITAL(pin)) {
     Firmata.write(SW_SERIAL);
     Firmata.write(8); // arbitrary
   }
-
 }
 
-boolean StepperFirmata::handleSysex(byte command, byte argc, byte *argv)
+boolean SoftSerialFirmata::handleSysex(byte command, byte argc, byte *argv)
 {
   if (command == SW_SERIAL_DATA) {
 
-    subCommand = argv[0];
+    byte subCommand = argv[0];
+    byte txPin, rxPin;
 
     if (subCommand == SW_SERIAL_CONFIG) {
       byte txPin = argv[1];
@@ -77,8 +75,10 @@ boolean StepperFirmata::handleSysex(byte command, byte argc, byte *argv)
         swSerial->write(data);
       }
     }
+    return true;
 
   }
+  return false;
 }
 
 void SoftSerialFirmata::reset()

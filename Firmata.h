@@ -78,8 +78,9 @@
 #define I2C                     0x06 // pin included in I2C setup
 #define ONEWIRE                 0x07 // pin configured for 1-wire
 #define STEPPER                 0x08 // pin configured for stepper motor
+#define SW_SERIAL               0x09
 #define IGNORE                  0x7F // pin configured to be ignored by digitalWrite and capabilityResponse
-#define TOTAL_PIN_MODES         10
+#define TOTAL_PIN_MODES         11
 
 extern "C" {
 // callback function types

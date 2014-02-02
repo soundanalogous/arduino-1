@@ -18,6 +18,8 @@
 #define SoftSerialFirmata_h
 
 #include <Firmata.h>
+#include <utility/FirmataFeature.h>
+#include <SoftwareSerial.h>
 
 #define SW_SERIAL_CONFIG   0x00
 #define SW_SERIAL_TX       0x01
@@ -29,7 +31,7 @@ class SoftSerialFirmata:public FirmataFeature
 public:
   boolean handlePinMode(byte pin, int mode);
   void handleCapability(byte pin);
-  boolean hnadleSysex(byte command, byte argc, byte *argv);
+  boolean handleSysex(byte command, byte argc, byte *argv);
   void reset();
 private:
   SoftwareSerial *swSerial;
