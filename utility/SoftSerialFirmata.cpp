@@ -20,10 +20,8 @@
 
 boolean SoftSerialFirmata::handlePinMode(byte pin, int mode)
 {
-  if (mode == SW_SERIAL) {
-
-  }
-  return true;
+  // pin mode is set by SoftwareSerial library
+  return false;
 }
 
 void SoftSerialFirmata::handleCapability(byte pin)
@@ -47,6 +45,8 @@ boolean SoftSerialFirmata::handleSysex(byte command, byte argc, byte *argv)
       long baud = (long)argv[3] | ((long)argv[4] << 7) | ((long)argv[5] << 14);
 
       if (!swSerial) {
+        Firmata.setPinMode(txPin, SW_SERIAL);
+        Firmata.setPinMode(rxPin, SW_SERIAL);
         swSerial = new SoftwareSerial(txPin, rxPin);
         swSerial->begin(baud);
       }
