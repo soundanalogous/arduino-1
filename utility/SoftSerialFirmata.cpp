@@ -35,9 +35,7 @@ void SoftSerialFirmata::handleCapability(byte pin)
 boolean SoftSerialFirmata::handleSysex(byte command, byte argc, byte *argv)
 {
   if (command == SW_SERIAL_DATA) {
-
     byte subCommand = argv[0];
-    byte txPin, rxPin;
 
     if (subCommand == SW_SERIAL_CONFIG) {
       byte txPin = argv[1];
@@ -47,6 +45,8 @@ boolean SoftSerialFirmata::handleSysex(byte command, byte argc, byte *argv)
       if (!swSerial) {
         Firmata.setPinMode(txPin, SW_SERIAL);
         Firmata.setPinMode(rxPin, SW_SERIAL);
+
+        // only allowing a single SoftwareSerial instance for now
         swSerial = new SoftwareSerial(txPin, rxPin);
         swSerial->begin(baud);
       }
@@ -56,7 +56,6 @@ boolean SoftSerialFirmata::handleSysex(byte command, byte argc, byte *argv)
         Firmata.write(START_SYSEX);
         Firmata.write(SW_SERIAL_DATA);
         Firmata.write(SW_SERIAL_TX);
-        Firmata.write(txPin);
         Encoder7Bit.startBinaryWrite();
         while (swSerial->available() > 0) {
           Encoder7Bit.writeBinary(swSerial->read());
@@ -70,7 +69,7 @@ boolean SoftSerialFirmata::handleSysex(byte command, byte argc, byte *argv)
       byte data;
 
       // reassemble data bytes and forward to sw serial write buffer
-      for (byte i = 2; i < argc; i += 2) {
+      for (byte i = 1; i < argc; i += 2) {
         data = argv[i] + (argv[i + 1] << 7);
         swSerial->write(data);
       }
